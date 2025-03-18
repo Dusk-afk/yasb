@@ -165,11 +165,11 @@ class ClockWidget(BaseWidget):
                     try:
                         if self._locale:
                             locale.setlocale(locale.LC_TIME, self._locale)
-                        datetime_format_search = re.search('\\{(.*)}', part)
-                        datetime_format_str = datetime_format_search.group()
-                        datetime_format = datetime_format_search.group(1)
+                        format_label_content = part
+                        datetime_format_search = re.findall('{(.*)}', part)
                         datetime_now = datetime.now(pytz.timezone(self._active_tz))
-                        format_label_content = part.replace(datetime_format_str,datetime_now.strftime(datetime_format))
+                        for datetime_format in datetime_format_search:
+                            format_label_content = format_label_content.replace("{" + datetime_format + "}",datetime_now.strftime(datetime_format))
                     except Exception:
                         format_label_content = part                    
                     active_widgets[widget_index].setText(format_label_content)
